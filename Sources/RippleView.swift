@@ -31,7 +31,7 @@ public class RippleView: UIView {
             borderView.layer.cornerRadius = borderView.frame.width / 2
         }
     }
-    @IBInspectable var rippleOutset: CGFloat = 0.0
+    @IBInspectable var rippleOutset: CGFloat = 64.0
     @IBInspectable var rippleDuration: Float = 3.0
     @IBInspectable var rippleMinInterval: Float = 0.0
     @IBInspectable var rippleMaxInterval: Float = 1.5
@@ -64,7 +64,8 @@ public class RippleView: UIView {
         self.addSubview(borderView)
         
         // add the first ripple
-        addSubRipple()
+        timer = NSTimer.scheduledTimerWithTimeInterval(
+            0, target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
     }
     
     private func resetTimer() {
@@ -92,7 +93,11 @@ public class RippleView: UIView {
         // set ripple animation
         subRippleView.alpha = 0.0
         UIView.animateWithDuration(NSTimeInterval(rippleDuration), delay: 0, options: .CurveEaseInOut, animations: {
-            subRippleView.frame = self.bounds
+            subRippleView.frame = CGRect(
+                x: self.borderView.frame.origin.x - subRippleView.layer.borderWidth,
+                y: self.borderView.frame.origin.y - subRippleView.layer.borderWidth,
+                width: self.borderView.frame.width + subRippleView.layer.borderWidth * 2,
+                height: self.borderView.frame.height + subRippleView.layer.borderWidth * 2)
             subRippleView.alpha = 1.0
         }) { (finished) in
             UIView.animateWithDuration(0.5, animations: {
@@ -103,12 +108,13 @@ public class RippleView: UIView {
         }
         
         // animation for layer
+        let finalRadius = self.borderView.frame.width / 2 + subRippleView.layer.borderWidth
         let layerAnim = CABasicAnimation(keyPath: "cornerRadius")
         layerAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
         layerAnim.fromValue = (self.frame.width + rippleOutset * 2) / 2
-        layerAnim.toValue = self.frame.width / 2
+        layerAnim.toValue = finalRadius
         layerAnim.duration = CFTimeInterval(rippleDuration)
-        subRippleView.layer.cornerRadius = self.frame.width / 2
+        subRippleView.layer.cornerRadius = finalRadius
         subRippleView.layer.addAnimation(layerAnim, forKey: "cornerRadius")
         
         
