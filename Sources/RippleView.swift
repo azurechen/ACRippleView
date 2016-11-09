@@ -11,12 +11,32 @@ import UIKit
 @IBDesignable
 public class RippleView: UIView {
     
-    @IBInspectable var borderWidth: CGFloat = 0.0
-    @IBInspectable var borderColor: UIColor = UIColor.whiteColor()
-    @IBInspectable var borderInset: CGFloat = 0.0
+    @IBInspectable var borderWidth: CGFloat = 0.0 {
+        didSet {
+            borderView.layer.borderWidth = borderWidth
+        }
+    }
+    @IBInspectable var borderColor: UIColor = UIColor.whiteColor() {
+        didSet {
+            borderView.layer.borderColor = borderColor.CGColor
+        }
+    }
+    @IBInspectable var borderInset: CGFloat = 0.0 {
+        didSet {
+            borderView.frame = CGRect(
+                x: borderInset,
+                y: borderInset,
+                width: self.frame.width - borderInset * 2,
+                height: self.frame.height - borderInset * 2)
+            borderView.layer.cornerRadius = borderView.frame.width / 2
+        }
+    }
     @IBInspectable var rippleOutset: CGFloat = 0.0
-    @IBInspectable var rippleMaxInterval: Float = 3.0
     @IBInspectable var rippleDuration: Float = 3.0
+    @IBInspectable var rippleMinInterval: Float = 0.0
+    @IBInspectable var rippleMaxInterval: Float = 1.5
+    @IBInspectable var rippleMinBorderWidth: Float = 1.0
+    @IBInspectable var rippleMaxBorderWidth: Float = 4.5
     
     private let borderView = UIView()
     private var timer = NSTimer()
@@ -37,30 +57,20 @@ public class RippleView: UIView {
     }
     
     private func initialize() {
-        // Add borderView
-        self.addSubview(borderView)
-    }
-    
-    override public func layoutSubviews() {
         self.clipsToBounds = false
         self.layer.cornerRadius = self.frame.width / 2
         
-        borderView.frame = CGRect(
-            x: borderInset,
-            y: borderInset,
-            width: self.bounds.width - borderInset * 2,
-            height: self.bounds.height - borderInset * 2)
-        borderView.layer.borderWidth = borderWidth
-        borderView.layer.borderColor = borderColor.CGColor
-        borderView.layer.cornerRadius = borderView.frame.width / 2
+        // Add borderView
+        self.addSubview(borderView)
         
-        resetTimer()
+        // add the first ripple
+        addSubRipple()
     }
     
     private func resetTimer() {
         timer.invalidate()
         timer = NSTimer.scheduledTimerWithTimeInterval(
-            NSTimeInterval(randomFloat(rippleMaxInterval)),
+            NSTimeInterval(randomFloat(min: rippleMinInterval, max: rippleMaxInterval)),
             target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
     }
     
@@ -73,16 +83,23 @@ public class RippleView: UIView {
             y: rippleOutset * -1,
             width: self.frame.width + rippleOutset * 2,
             height: self.frame.height + rippleOutset * 2)
-        subRippleView.layer.borderWidth = 8
+        
+        subRippleView.layer.borderWidth = CGFloat(randomFloat(min: rippleMinBorderWidth, max: rippleMaxBorderWidth))
         subRippleView.layer.borderColor = self.backgroundColor?.CGColor
         
         self.addSubview(subRippleView)
         
         // set ripple animation
+        subRippleView.alpha = 0.0
         UIView.animateWithDuration(NSTimeInterval(rippleDuration), delay: 0, options: .CurveEaseInOut, animations: {
             subRippleView.frame = self.bounds
+            subRippleView.alpha = 1.0
         }) { (finished) in
-            subRippleView.removeFromSuperview()
+            UIView.animateWithDuration(0.5, animations: {
+                subRippleView.alpha = 0.0
+            }, completion: { (finished) in
+                subRippleView.removeFromSuperview()
+            })
         }
         
         // animation for layer
@@ -99,7 +116,7 @@ public class RippleView: UIView {
         resetTimer()
     }
     
-    private func randomFloat(max: Float) -> Float {
-        return Float(arc4random_uniform(UInt32(max * 100)) + 1) / 100
+    private func randomFloat(min min:Float, max: Float) -> Float {
+        return Float(arc4random_uniform(UInt32((max - min) * 100)) + 1) / 100 + min
     }
 }
