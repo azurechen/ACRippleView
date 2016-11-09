@@ -15,8 +15,8 @@ public class RippleView: UIView {
     @IBInspectable var borderColor: UIColor = UIColor.whiteColor()
     @IBInspectable var borderInset: CGFloat = 0.0
     @IBInspectable var rippleOutset: CGFloat = 0.0
-    @IBInspectable var rippleMaxInterval: Float = 1.0
-    @IBInspectable var rippleSpeed: Float = 1.0
+    @IBInspectable var rippleMaxInterval: Float = 3.0
+    @IBInspectable var rippleDuration: Float = 3.0
     
     private let borderView = UIView()
     private var timer = NSTimer()
@@ -67,16 +67,35 @@ public class RippleView: UIView {
     @objc private func addSubRipple() {
         let subRippleView = UIView()
         
+        // add ripple
         subRippleView.frame = CGRect(
             x: rippleOutset * -1,
             y: rippleOutset * -1,
             width: self.frame.width + rippleOutset * 2,
             height: self.frame.height + rippleOutset * 2)
-        subRippleView.layer.borderWidth = 3
+        subRippleView.layer.borderWidth = 8
         subRippleView.layer.borderColor = self.backgroundColor?.CGColor
-        subRippleView.layer.cornerRadius = subRippleView.frame.width / 2
         
         self.addSubview(subRippleView)
+        
+        // set ripple animation
+        UIView.animateWithDuration(NSTimeInterval(rippleDuration), delay: 0, options: .CurveEaseInOut, animations: {
+            subRippleView.frame = self.bounds
+        }) { (finished) in
+            subRippleView.removeFromSuperview()
+        }
+        
+        // animation for layer
+        let layerAnim = CABasicAnimation(keyPath: "cornerRadius")
+        layerAnim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        layerAnim.fromValue = (self.frame.width + rippleOutset * 2) / 2
+        layerAnim.toValue = self.frame.width / 2
+        layerAnim.duration = CFTimeInterval(rippleDuration)
+        subRippleView.layer.cornerRadius = self.frame.width / 2
+        subRippleView.layer.addAnimation(layerAnim, forKey: "cornerRadius")
+        
+        
+        // reset timer to add next ripple
         resetTimer()
     }
     
