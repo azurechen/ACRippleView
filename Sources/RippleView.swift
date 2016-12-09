@@ -16,9 +16,9 @@ public class RippleView: UIView {
             borderView.layer.borderWidth = borderWidth
         }
     }
-    @IBInspectable var borderColor: UIColor = UIColor.whiteColor() {
+    @IBInspectable var borderColor: UIColor = UIColor.white {
         didSet {
-            borderView.layer.borderColor = borderColor.CGColor
+            borderView.layer.borderColor = borderColor.cgColor
         }
     }
     @IBInspectable var borderInset: CGFloat = 0.0 {
@@ -38,8 +38,8 @@ public class RippleView: UIView {
     @IBInspectable var rippleMinBorderWidth: Float = 1.0
     @IBInspectable var rippleMaxBorderWidth: Float = 4.5
     
-    private let borderView = UIView()
-    private var timer = NSTimer()
+    fileprivate let borderView = UIView()
+    fileprivate var timer = Timer()
     
     // MARK: Init
     required public init(coder aDecoder: NSCoder) {
@@ -52,11 +52,11 @@ public class RippleView: UIView {
         initialize()
     }
     
-    override public func prepareForInterfaceBuilder() {
+    override open func prepareForInterfaceBuilder() {
         initialize()
     }
     
-    private func initialize() {
+    fileprivate func initialize() {
         self.clipsToBounds = false
         self.layer.cornerRadius = self.frame.width / 2
         
@@ -64,18 +64,18 @@ public class RippleView: UIView {
         self.addSubview(borderView)
         
         // add the first ripple
-        timer = NSTimer.scheduledTimerWithTimeInterval(
-            0, target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
+        timer = Timer.scheduledTimer(
+            timeInterval: 0, target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
     }
     
-    private func resetTimer() {
+    fileprivate func resetTimer() {
         timer.invalidate()
-        timer = NSTimer.scheduledTimerWithTimeInterval(
-            NSTimeInterval(randomFloat(min: rippleMinInterval, max: rippleMaxInterval)),
+        timer = Timer.scheduledTimer(
+            timeInterval: TimeInterval(randomFloat(min: rippleMinInterval, max: rippleMaxInterval)),
             target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
     }
     
-    @objc private func addSubRipple() {
+    @objc fileprivate func addSubRipple() {
         let subRippleView = UIView()
         
         // add ripple
@@ -86,13 +86,13 @@ public class RippleView: UIView {
             height: self.frame.height + rippleOutset * 2)
         
         subRippleView.layer.borderWidth = CGFloat(randomFloat(min: rippleMinBorderWidth, max: rippleMaxBorderWidth))
-        subRippleView.layer.borderColor = self.backgroundColor?.CGColor
+        subRippleView.layer.borderColor = self.backgroundColor?.cgColor
         
         self.addSubview(subRippleView)
         
         // set ripple animation
         subRippleView.alpha = 0.0
-        UIView.animateWithDuration(NSTimeInterval(rippleDuration), delay: 0, options: .CurveEaseInOut, animations: {
+        UIView.animate(withDuration: TimeInterval(rippleDuration), delay: 0, options: UIViewAnimationOptions(), animations: {
             subRippleView.frame = CGRect(
                 x: self.borderView.frame.origin.x - subRippleView.layer.borderWidth,
                 y: self.borderView.frame.origin.y - subRippleView.layer.borderWidth,
@@ -100,7 +100,7 @@ public class RippleView: UIView {
                 height: self.borderView.frame.height + subRippleView.layer.borderWidth * 2)
             subRippleView.alpha = 1.0
         }) { (finished) in
-            UIView.animateWithDuration(0.5, animations: {
+            UIView.animate(withDuration: 0.5, animations: {
                 subRippleView.alpha = 0.0
             }, completion: { (finished) in
                 subRippleView.removeFromSuperview()
@@ -115,14 +115,14 @@ public class RippleView: UIView {
         layerAnim.toValue = finalRadius
         layerAnim.duration = CFTimeInterval(rippleDuration)
         subRippleView.layer.cornerRadius = finalRadius
-        subRippleView.layer.addAnimation(layerAnim, forKey: "cornerRadius")
+        subRippleView.layer.add(layerAnim, forKey: "cornerRadius")
         
         
         // reset timer to add next ripple
         resetTimer()
     }
     
-    private func randomFloat(min min:Float, max: Float) -> Float {
+    fileprivate func randomFloat(min:Float, max: Float) -> Float {
         return Float(arc4random_uniform(UInt32((max - min) * 100)) + 1) / 100 + min
     }
 }
