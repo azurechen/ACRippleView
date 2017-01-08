@@ -1,5 +1,5 @@
 //
-//  RippleView.swift
+//  ACRippleView.swift
 //  LoveNuts
 //
 //  Created by Azure Chen on 8/28/16.
@@ -9,7 +9,7 @@
 import UIKit
 
 @IBDesignable
-public class RippleView: UIView {
+public class ACRippleView: UIView {
     
     @IBInspectable var borderWidth: CGFloat = 0.0 {
         didSet {
@@ -65,14 +65,14 @@ public class RippleView: UIView {
         
         // add the first ripple
         timer = Timer.scheduledTimer(
-            timeInterval: 0, target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
+            timeInterval: 0, target: self, selector: #selector(ACRippleView.addSubRipple), userInfo: nil, repeats: false)
     }
     
     fileprivate func resetTimer() {
         timer.invalidate()
         timer = Timer.scheduledTimer(
             timeInterval: TimeInterval(randomFloat(min: rippleMinInterval, max: rippleMaxInterval)),
-            target: self, selector: #selector(RippleView.addSubRipple), userInfo: nil, repeats: false)
+            target: self, selector: #selector(ACRippleView.addSubRipple), userInfo: nil, repeats: false)
     }
     
     @objc fileprivate func addSubRipple() {

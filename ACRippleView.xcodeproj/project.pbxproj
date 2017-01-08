@@ -12,7 +12,7 @@
 		53A619C91E22BC550063F2A0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53A619C71E22BC550063F2A0 /* Main.storyboard */; };
 		53A619CB1E22BC550063F2A0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53A619CA1E22BC550063F2A0 /* Assets.xcassets */; };
 		53A619CE1E22BC550063F2A0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 53A619CC1E22BC550063F2A0 /* LaunchScreen.storyboard */; };
-		53A619D71E22BE7A0063F2A0 /* RippleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A619D61E22BE7A0063F2A0 /* RippleView.swift */; };
+		53A619D71E22BE7A0063F2A0 /* ACRippleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53A619D61E22BE7A0063F2A0 /* ACRippleView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,7 +23,7 @@
 		53A619CA1E22BC550063F2A0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		53A619CD1E22BC550063F2A0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		53A619CF1E22BC550063F2A0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		53A619D61E22BE7A0063F2A0 /* RippleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RippleView.swift; sourceTree = "<group>"; };
+		53A619D61E22BE7A0063F2A0 /* ACRippleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ACRippleView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +70,7 @@
 		53A619D51E22BC650063F2A0 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				53A619D61E22BE7A0063F2A0 /* RippleView.swift */,
+				53A619D61E22BE7A0063F2A0 /* ACRippleView.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -148,7 +148,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				53A619D71E22BE7A0063F2A0 /* RippleView.swift in Sources */,
+				53A619D71E22BE7A0063F2A0 /* ACRippleView.swift in Sources */,
 				53A619C61E22BC550063F2A0 /* ViewController.swift in Sources */,
 				53A619C41E22BC550063F2A0 /* AppDelegate.swift in Sources */,
 			);
